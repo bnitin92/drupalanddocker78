@@ -1,0 +1,90 @@
+version: '3.3'
+
+services:
+  #mysql:
+    # image: mariadb:latest
+    # container_name: mysql4
+    # expose:
+    #   - "3306"
+    # #env_file: .env 
+    # environment:
+    # - MYSQL_DATABASE=drupal
+    # - MYSQL_USER=mysql
+    # - MYSQL_PASSWORD=mysql
+    # - MYSQL_ROOT_PASSWORD= root
+    # volumes:
+    #   - db_data:/var/lib/mysql
+    # restart: "no"
+
+
+  drupal8:
+#   depends_on:
+ #     - postgres
+    build: ./drupal8
+    container_name: drupal8
+    ports:
+      #host:container
+      - 80:80
+    volumes:
+      - drupal8_modules:/var/www/html/modules
+      - drupal8_profiles:/var/www/html/profiles
+      - drupal8_themes:/var/www/html/themes
+      - drupal8_sites:/var/www/html/sites
+      - drupal8_private:/var/www/html/files
+    restart: "no"
+    networks:
+       drupal-network: 
+
+
+  drupal7:
+#   depends_on:
+ #     - postgres
+    build: ./drupal7
+    container_name: drupal7
+    ports:
+      #host:container
+      - 8080:80
+    volumes:
+      - drupal7_modules:/var/www/html/modules
+      - drupal7_profiles:/var/www/html/profiles
+      - drupal7_themes:/var/www/html/themes
+      - drupal7_sites:/var/www/html/sites
+      - drupal7_private:/var/www/html/files
+    restart: "no"
+    networks:
+       drupal-network: 
+
+
+  postgres:
+    build: ./postgresql
+    container_name: postgres
+#    environment:
+#      POSTGRES_PASSWORD: nitin
+#    expose:
+#      - "5432"
+
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: "no"
+    #network_mode: service:drupal
+    networks:
+       drupal-network:
+
+volumes:
+  drupal8_modules:  
+  drupal8_profiles:
+  drupal8_themes:
+  drupal8_sites:
+  drupal8_private:
+  db_data:
+  drupal7_modules:  
+  drupal7_profiles:
+  drupal7_themes:
+  drupal7_sites:
+  drupal7_private:
+  
+
+networks:
+  drupal-network:
+    driver : bridge
+  
